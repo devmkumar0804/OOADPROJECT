@@ -146,6 +146,287 @@ class ConnectionManager{
     }
 }
 
+class Citizen{
+    public Connection connCitizen = null;
+    Statement s1;
+    ResultSet r1;
+    public int rideId=0;
+    public String citizenName;
+    public String citizenID;
+    public String bankID;
+    public String citizenEmail;
+    public String citizenType;
+    public String phno;
+
+    public int getRideId() throws SQLException {
+        ResultSet r2;
+        r2 = s1.executeQuery("select * from transport");
+        int max = 0;
+        while(r2.next()){
+            //String a = r2.getString("ride_id");
+            int a = r2.getInt("ride_id");
+            if(a>=max){
+                max=a;
+            }
+        }
+        max=max+1;
+        this.rideId=max;
+        return rideId;
+    }
+
+    public void setRideId(int rideId) {
+        this.rideId = rideId;
+    }
+
+    public String getCitizenName() {
+        return citizenName;
+    }
+
+    public void setCitizenName(String citizenName) {
+        this.citizenName = citizenName;
+    }
+
+    public String getCitizenID() {
+        return citizenID;
+    }
+
+    public void setCitizenID(String citizenID) {
+        this.citizenID = citizenID;
+    }
+
+    public String getBankID() {
+        return bankID;
+    }
+
+    public void setBankID(String bankID) {
+        this.bankID = bankID;
+    }
+
+    public String getCitizenEmail() {
+        return citizenEmail;
+    }
+
+    public void setCitizenEmail(String citizenEmail) {
+        this.citizenEmail = citizenEmail;
+    }
+
+    public String getCitizenType() {
+        return citizenType;
+    }
+
+    public void setCitizenType(String citizenType) {
+        this.citizenType = citizenType;
+    }
+
+    public String getPhno() {
+        return phno;
+    }
+
+    public void setPhno(String phno) {
+        this.phno = phno;
+    }
+
+    public void initiate() throws ClassNotFoundException, SQLException{
+        Class.forName("com.mysql.jdbc.Driver"); 
+        connCitizen = DriverManager.getConnection("jdbc:mysql://localhost:3306/smartcity","root","Fllbcksql");
+        s1 = connCitizen.createStatement();
+    }
+
+    public void closer() throws SQLException{
+        connCitizen.close();
+        s1.close();
+    }
+
+    public Citizen login() throws SQLException{
+        Scanner sc1 = new Scanner(System.in);
+        System.out.println("Enter your citizen id");
+        String id = sc1.nextLine();
+        System.out.println("id = "+id);
+        ResultSet rciti;
+        rciti = s1.executeQuery("SELECT * FROM citizen where citizen_id="+"\""+id+"\"");
+      while(rciti.next()){
+        // citizenName = rciti.getString("CName");
+        // citizenEmail = rciti.getString("email");
+        // phno = rciti.getString("phno");
+        // citizenID = rciti.getString("citizen_id");
+        // citizenType = rciti.getString("citizen_type");
+        // bankID = rciti.getString("bank_id");
+        setCitizenName(rciti.getString("CName"));
+        setCitizenEmail(rciti.getString("email"));
+        setCitizenID(rciti.getString("citizen_id"));
+        setCitizenType(rciti.getString("citizen_type"));
+        setPhno(rciti.getString("phno"));
+        setBankID(rciti.getString("bank_id"));
+
+      }
+      System.out.println("Hello There, "+citizenName);
+      return this;
+    }
+    JFrame login1 = new JFrame("login");
+
+    public boolean checkframe(){
+        return login1.isVisible();
+    }
+
+    public ArrayList listLocs() throws SQLException{
+        ResultSet rLoc;
+        ArrayList final1 = new ArrayList<>();
+        rLoc = s1.executeQuery("Select * from locations");
+        int i=0;
+        while(rLoc.next()){
+            ArrayList a = new ArrayList<>();
+            System.out.println("Landmark "+(i+1));
+            i=i+1;
+            System.out.println("Locality : "+rLoc.getString("address"));
+            System.out.println("Name : "+rLoc.getString("LName"));
+            System.out.println("Brief Description : "+rLoc.getString("Descript"));
+            System.out.println("Review : "+rLoc.getFloat("review"));
+            a.add(rLoc.getString("address"));
+            a.add(rLoc.getString("LName"));
+            a.add(rLoc.getString("Descript"));
+            a.add(rLoc.getString("review"));
+            final1.add(a);
+        }
+        return final1;
+    }
+
+    public ArrayList listDist() throws SQLException{
+        ResultSet rLoc;
+        ArrayList final1 = new ArrayList<>();
+        rLoc = s1.executeQuery("Select * from dist");
+        int i=0;
+        while(rLoc.next()){
+            ArrayList a = new ArrayList<>();
+            System.out.println("Option "+(i+1));
+            i=i+1;
+            System.out.println("Source : "+rLoc.getString("sourc"));
+            System.out.println("Destination : "+rLoc.getString("destination"));
+            System.out.println("rate per kilometer : "+rLoc.getDouble("rateperkm"));
+            System.out.println("Ride Type : "+rLoc.getString("ride_type"));
+            System.out.println("Distance : "+rLoc.getDouble("distance"));
+            a.add(rLoc.getString("sourc"));
+            a.add(rLoc.getString("destination"));
+            a.add(rLoc.getString("rateperkm"));
+            a.add(rLoc.getString("ride_type"));
+            a.add(rLoc.getString("distance"));
+            final1.add(a);
+        }
+        return final1;
+    }
+
+    public ArrayList listRides() throws SQLException{
+        ResultSet rLoc;
+        ArrayList final1 = new ArrayList<>();
+        rLoc = s1.executeQuery("Select * from transport where citizen_id="+"\""+this.getCitizenID()+"\"");
+        int i=0;
+        while(rLoc.next()){
+            ArrayList a = new ArrayList<>();
+            System.out.println("Option "+(i+1));
+            i=i+1;
+            System.out.println("Ride number : "+rLoc.getString("ride_id"));
+            System.out.println("Ride type : "+rLoc.getString("ride_type"));
+            System.out.println("Availability : "+rLoc.getBoolean("Availability"));
+            System.out.println("Total Fare : "+rLoc.getDouble("fare"));
+            System.out.println("Pickup point : "+rLoc.getString("sourc"));
+            System.out.println("Drop location : "+rLoc.getString("dest"));
+            a.add(rLoc.getString("ride_id"));
+            a.add(rLoc.getString("ride_type"));
+            a.add(rLoc.getBoolean("Availability"));
+            a.add(rLoc.getDouble("fare"));
+            a.add(rLoc.getString("sourc"));
+            a.add(rLoc.getString("dest"));
+            final1.add(a);
+        }
+        return final1;
+    }
+
+    public double utilCalc() throws SQLException{
+        ResultSet rUtil;
+        double amt=0;
+        
+        rUtil = s1.executeQuery("SELECT * from utils where citizen_id="+"\""+this.getCitizenID()+"\"");
+        while(rUtil.next()){
+            amt = amt + rUtil.getDouble("rate")+rUtil.getDouble("overdue");
+            
+        }
+        return amt;
+    }
+
+    public ArrayList listBank() throws SQLException{
+        ResultSet rBank;
+        ArrayList final1 = new ArrayList<>();
+        rBank = s1.executeQuery("select * from bank where citizen_id="+"\""+this.getCitizenID()+"\"");
+        while(rBank.next()){
+            System.out.println("bank id = "+rBank.getString("bank_id"));
+            System.out.println("bank balance = "+rBank.getDouble("amount"));
+            final1.add(rBank.getString("bank_id"));
+            final1.add(rBank.getString("amount"));
+        }
+        return final1;
+    }
+
+    public void makePayment() throws SQLException{
+        ResultSet r1;
+        double amt = utilCalc();
+        ResultSet rBank;
+        double newAmt=0;
+        rBank = s1.executeQuery("select * from bank where citizen_id="+"\""+this.getCitizenID()+"\"");
+        while(rBank.next()){
+            System.out.println("bank id = "+rBank.getString("bank_id"));
+            System.out.println("bank balance = "+rBank.getDouble("amount"));
+            newAmt = rBank.getDouble("amount");
+        }
+        newAmt=newAmt-amt;
+        int r = s1.executeUpdate("update bank set amount="+newAmt+" where citizen_id="+"\""+this.getCitizenID()+"\"");
+        r = s1.executeUpdate("update utils set rate=0 and overdue=0 where citizen_id="+"\""+this.getCitizenID()+"\"");
+        System.out.println("payment made, data updated");
+
+    }
+
+    public void makePaymentRide(String src,String dest,String rideType) throws SQLException{
+        ResultSet r1;
+        double rpkm;
+        double dist;
+        double amt=0;
+        ResultSet rBank;
+        double newAmt=0;
+        
+        rBank = s1.executeQuery("select * from bank where citizen_id="+"\""+this.getCitizenID()+"\"");
+        while(rBank.next()){
+            System.out.println("bank id = "+rBank.getString("bank_id"));
+            System.out.println("bank balance = "+rBank.getDouble("amount"));
+            newAmt = rBank.getDouble("amount");
+        }
+        rBank = s1.executeQuery("select * from dist where sourc="+"\""+src+"\""+" and destination="+"\""+dest+"\"");
+        while(rBank.next()){
+            System.out.println("Fare = "+rBank.getString("rateperkm"));
+            System.out.println("Distance = "+rBank.getDouble("distance"));
+            rpkm = rBank.getDouble("rateperkm");
+            dist = rBank.getDouble("distance");
+            
+            amt=rpkm*dist;
+            System.out.println(amt);
+        }
+        newAmt=newAmt-amt;
+        int r = s1.executeUpdate("update bank set amount="+newAmt+" where citizen_id="+"\""+this.getCitizenID()+"\"");
+        System.out.println("payment made, data updated");
+        r = s1.executeUpdate("insert into transport values("+"\""+this.getRideId()+"\""+","+"\""+rideType+"\""+","+"True"+","+amt+","+"\""+src+"\""+","+"\""+dest+"\""+","+"\""+citizenID+"\""+")");
+        rideId=rideId+1;
+
+    }
+}
+
+class ImagePanel extends JComponent{
+    private Image image;
+    public ImagePanel(Image image){
+        this.image=image;
+    }
+    @Override
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, this);
+    }
+}
 
 
 class CitizenView{
