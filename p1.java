@@ -148,6 +148,326 @@ class ConnectionManager{
 
 
 
+class CitizenView{
+    public void mainFrame(Citizen c1) throws IOException{
+        
+
+        JFrame frame1 = new JFrame("Smart City Manager");
+        //Image img = new ImageIcon("C:\\Users\\gauta\\SmartCity\\background.jpg");
+        //frame1.setIconImage(img.getImage())
+
+
+        frame1.pack();
+        frame1.setSize(1000, 1000);
+        frame1.setLayout(new BorderLayout(20, 30));
+        
+        frame1.setResizable(true);
+        JLabel background = new JLabel(new ImageIcon("./background.jpg"));
+        frame1.add(background);
+        frame1.setBackground(new Color(5, 10, 15));
+        frame1.setSize(1000, 1000);
+
+        Image img = Toolkit.getDefaultToolkit().getImage("./background.jpg");
+        frame1.setBackground(new Color(50, 50, 50));
+
+
+
+        JPanel headingPanel = new JPanel(new BorderLayout(20, 30));
+        JLabel headingLabel = new JLabel("Hello There, "+c1.getCitizenName(),0);
+        //headingLabel.setBounds(150, 20, 200, 20);
+        // headingLabel.setAlignmentX(0.5f);
+        // headingLabel.setAlignmentY(0.5f);
+        //frame1.add(headingLabel);
+        headingPanel.add(headingLabel,BorderLayout.NORTH);
+        JLabel l1 = new JLabel("Welcome to the Smart City Manager",0);
+        //l1.setBounds(100, 40, 300, 20);
+        headingPanel.add(l1,BorderLayout.SOUTH);
+        //headingPanel.set
+        //frame1.add(l1);
+        JMenu m1 = new JMenu("Available Options", true);
+
+        JButton b1 = new JButton("List Locations");
+        JButton  b2 = new JButton("List Available Transports");
+        JButton b3 = new JButton("List Your Bank Details");
+        JButton b4 = new JButton("Book A Ride");
+        JButton b5 = new JButton("Make A Payment");
+        JButton b6 = new JButton("List Your Utility Dues");
+        JButton b7 = new JButton("List your booked rides");
+        JPanel buttonPanel = new JPanel();
+       //buttonPanel.setBounds(300,  300, 500, 500);
+        buttonPanel.add(b1);
+        buttonPanel.add(b2);
+        buttonPanel.add(b3);
+        buttonPanel.add(b4);
+        buttonPanel.add(b5);
+        buttonPanel.add(b6);
+        buttonPanel.add(b7);
+        // b1.setBounds(50, 200, 50, 20);
+        // b1.setBounds(110, 200, 50, 20);
+        // b1.setBounds(170, 200, 50, 20);
+        // b1.setBounds(230, 200, 50, 20);
+        // b1.setBounds(290, 200, 50, 20);
+        // b1.setBounds(350, 200, 50, 20);
+        // frame1.add(b1);
+        // frame1.add(b2);
+        // frame1.add(b3);
+        // frame1.add(b4);
+        // frame1.add(b5);
+        // frame1.add(b6);
+        JTabbedPane tResult = new JTabbedPane();
+        //m1.setLayout(new GridLayout(3, 2));
+        //locs.setBounds(100, 70, 100, 20);
+        b1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tResult.removeAll();
+                    ArrayList locs1 = c1.listLocs();
+                    
+                    //t1.setBounds(50, 150, 400, 300);
+                    for(int i=0;i<locs1.size();i++){
+                        ArrayList a = (ArrayList) locs1.get(i);
+                        JPanel p1 = new JPanel();
+                        JLabel s1 = new JLabel("locality : "+a.get(0));
+                        JLabel s2 = new JLabel("Name : "+a.get(1));
+                        JLabel s3 = new JLabel("brief description : "+a.get(2));
+                        JLabel s4 = new JLabel("review : "+a.get(3));
+                        String f = s1+"\n"+s2+"\n"+s3+"\n"+s4+"\n";
+                        JTextField tf1 = new JTextField(f);
+                        p1.setLayout(new GridLayout(4, 1));
+                        p1.setBounds(100, 600, 600, 600);
+                        tf1.setSize(600,600);
+                        p1.add(s1, 0);
+                        p1.add(s2,1);
+                        p1.add(s3,2);
+                        p1.add(s4,3);
+                        tResult.add("location "+(i+1),p1);
+
+                    }
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        b2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tResult.removeAll();
+                    ArrayList locs1 = c1.listDist();
+                    //t1.setBounds(50, 150, 400, 300);
+                    for(int i=0;i<locs1.size();i++){
+                        ArrayList a = (ArrayList) locs1.get(i);
+                        JPanel p1 = new JPanel();
+                        JLabel s1 = new JLabel("Source : "+a.get(0));
+                        JLabel s2 = new JLabel("Destination : "+a.get(1));
+                        JLabel s3 = new JLabel("Fare per km : "+a.get(2));
+                        JLabel s4 = new JLabel("Ride Type : "+a.get(3));
+                        JLabel s5 = new JLabel("Distance : "+a.get(4));
+                        String f = s1+"\n"+s2+"\n"+s3+"\n"+s4+"\n";
+                        JTextField tf1 = new JTextField(f);
+                        p1.setLayout(new GridLayout(4, 1));
+                        tf1.setSize(600,500);
+                        p1.add(s1);
+                        p1.add(s2);
+                        p1.add(s3);
+                        p1.add(s4);
+                        p1.add(s5);
+                        tResult.add("Ride  "+(i+1),p1);
+                    }
+                    //frame1.add(tResult,BorderLayout.PAGE_END);
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                    
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        b7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tResult.removeAll();
+                    ArrayList locs1 = c1.listRides();
+                    //t1.setBounds(50, 150, 400, 300);
+                    for(int i=0;i<locs1.size();i++){
+                        ArrayList a = (ArrayList) locs1.get(i);
+                        JPanel p1 = new JPanel();
+                        JLabel s1 = new JLabel("Ride Number : "+a.get(0));
+                        JLabel s2 = new JLabel("Ride Type : "+a.get(1));
+                        JLabel s3 = new JLabel("Availability : "+a.get(2));
+                        JLabel s4 = new JLabel("Total Fare : "+a.get(3));
+                        JLabel s5 = new JLabel("Pickup Point : "+a.get(4));
+                        JLabel s6 = new JLabel("Drop location : "+a.get(5));
+                        String f = s1+"\n"+s2+"\n"+s3+"\n"+s4+"\n";
+                        JTextField tf1 = new JTextField(f);
+                        p1.setLayout(new GridLayout(6, 1));
+                        tf1.setSize(600,500);
+                        p1.add(s1);
+                        p1.add(s2);
+                        p1.add(s3);
+                        p1.add(s4);
+                        p1.add(s5);
+                        p1.add(s6);
+                        tResult.add("Ride Number  "+(i+1),p1);
+                    }
+                    //frame1.add(tResult,BorderLayout.PAGE_END);
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                    
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        b4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String s1,s2,s4;
+                    tResult.removeAll();
+                    ArrayList locs1 = c1.listDist();
+                    String[] locs2=new String[24];
+                    //t1.setBounds(50, 150, 400, 300);
+                    for(int i=0;i<locs1.size();i++){
+                        ArrayList a = (ArrayList) locs1.get(i);
+                        //JPanel p1 = new JPanel();
+                        s1 = (String) a.get(0);
+                        s2 = (String) a.get(1);
+                        s4 = (String) a.get(3);
+                        String s3 = s1+" to "+s2+" and ride type = "+s4;
+                        locs2[i]=s3;
+                    }
+                    for(String x : locs2){
+                        System.out.println(x);
+                    }
+                    JComboBox jcBox = new JComboBox(locs2);
+                    JLabel newChoice = new JLabel("Enter choice of location");
+                    JButton choiceButton = new JButton("CHOOSE");
+                    JPanel p1 = new JPanel(new GridLayout(4, 1, 0, 0));
+                    p1.add(jcBox);
+                    p1.add(newChoice);
+                    p1.add(choiceButton);
+                    tResult.add("SELECTION",p1);
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                    choiceButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e){
+
+                            tResult.removeAll();
+                            String s3 = (String) jcBox.getSelectedItem();
+                            String[] params = s3.split(" ");
+                            try {
+                                c1.makePaymentRide(params[0], params[2],params[7]);
+                            } catch (SQLException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                            }
+                            JLabel l7 = new JLabel("Ride Booked");
+                            p1.add(l7);
+                            tResult.add(p1);
+                        }
+                    });
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+
+        b3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tResult.removeAll();
+                    ArrayList locs1 = c1.listBank();
+                    //t1.setBounds(50, 150, 400, 300);
+                    for(int i=0;i<locs1.size();i++){
+                    
+                        JPanel p1 = new JPanel();
+                        JLabel s1 = new JLabel("Bank ID : "+locs1.get(0));
+                        JLabel s2 = new JLabel("Balance : "+locs1.get(1));
+
+                        p1.setLayout(new GridLayout(4, 1));
+                        p1.add(s1);
+                        p1.add(s2);
+                        tResult.add("Your Balance ",p1);
+                        break;
+
+                    }
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        b6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tResult.removeAll();
+                    Double amt = c1.utilCalc();
+                    JPanel p1 = new JPanel();
+                        JLabel s1 = new JLabel("Amount Due : "+amt);
+                    p1.add(s1);
+                    tResult.add(p1);
+                    //t1.setBounds(50, 150, 400, 300);
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        b5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    tResult.removeAll();
+                    c1.makePayment();
+                    JPanel p1 = new JPanel();
+                        JLabel s1 = new JLabel("Utility bills payed");
+                    p1.add(s1);
+                    tResult.add(p1);
+                    //t1.setBounds(50, 150, 400, 300);
+                    frame1.add(tResult,BorderLayout.PAGE_END);
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+        // frame1.add(b1);
+        // frame1.add(b2);
+        // frame1.add(b3);
+        // frame1.add(b4);
+        // frame1.add(b5);
+        // frame1.add(b6);
+        headingPanel.setVisible(true);
+        frame1.add(headingPanel,BorderLayout.PAGE_START);
+        buttonPanel.setVisible(true);
+        frame1.add(buttonPanel,BorderLayout.CENTER);
+        if(c1.checkframe()==true){frame1.setVisible(false);}
+        else{frame1.setVisible(true);}
+
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    
+}
+
+
 
 public class p1{
     public static void main(String[] args) throws IOException, SQLException {
